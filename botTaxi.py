@@ -29,6 +29,10 @@ TARGET_CHAT_IDS = [
     -1003431421989
 ]
 
+# =================== KECHIKISH (soniyada) ===================
+# E'lon guruhdan kelgandan keyin necha soniyadan so'ng yuboriladi
+SEND_DELAY = 10   # xohlasangiz 15 qilib qo'ying
+
 # =================== KALIT SO‘ZLAR ===================
 KEYWORDS = [
     # odam bor
@@ -39,10 +43,7 @@ KEYWORDS = [
     'odam bor 1','odam bor 2','odam bor 3','odam bor 4',
     'rishtonga odam bor','toshkentga odam bor',"toshkendan farg'onaga odam bor",
     'тўрта одам бор','одам бор','комплект одам бор','компилект odam бор','кампилек одам бор',
-    'towga 1kishi', 'toshkentga 1kishi', "farg'onaga 1kishi", 'rishtonga 1kishi', '1kishi bor',
-    'towga 2kishi', 'toshkentga 2kishi', "farg'onaga 2kishi", 'rishtonga 2kishi', '2kishi bor',
-    'towga 3kishi', 'toshkentga 3kishi', "farg'onaga 3kishi", 'rishtonga 3kishi', '3kishi bor',
-    'towga 4kishi', 'toshkentga 4kishi', "farg'onaga 4kishi", 'rishtonga 4kishi', '4kishi bor',
+    'towga 1kishi', 'rishtonga 4kishi', '4kishi bor',
     'машина бор','одам бор эди','одам бор экан','одам бор 1','одам бор 2','одам бор 3','одам бор 4',
     'битта одам бор','иккита одам бор','учта одам бор','комплек одам бор','1та одам бор','2та одам бор',
     '3та одам бор','4та одам бор', 'toshkentdan bir kishi', 'rishtonga bir kishi', '1 ta qiz bor', 'ayol kishi bor mashina sorashyabdi',
@@ -52,8 +53,6 @@ KEYWORDS = [
     
     # mashina kerak
     'mashina kerak','mashina kere','mashina kerek','mashina kera','mashina keraa',
-    'bagajli mashina kerak','bosh mashina kerak','bosh mashina bormi','boshi bormi',
-    'mashina izlayapman','mashina topaman','mashina kerak edi',
     'машина керак','багажли машина керак','бош машина керак','машина кере','машina кераа',
 
     # pochta bor
@@ -89,6 +88,22 @@ def normalize_phone(raw):
     if len(digits) == 9:
         return '+998' + digits
     return None
+
+# =================== KECHIKIB YUBORISH ===================
+pending_tasks = set()
+
+async def send_later(message_text):
+    try:
+        await asyncio.sleep(SEND_DELAY)
+        for target_id in TARGET_CHAT_IDS:
+            await client.send_message(
+                target_id,
+                message_text,
+                parse_mode='html'
+            )
+            print(f"📨 Yuborildi → {target_id}")
+    except Exception as e:
+        print("❌ Yuborishda xatolik:", e)
 
 # =================== HANDLER ===================
 @client.on(events.NewMessage(incoming=True))
@@ -144,13 +159,12 @@ async def handler(event):
             f"👉🏻 <b></b> {profile_link}"
         )
 
-        for target_id in TARGET_CHAT_IDS:
-            await client.send_message(
-                target_id,
-                message_text,
-                parse_mode='html'
-            )
-            print(f"📨 Yuborildi → {target_id}")
+        # Darhol yubormaymiz: SEND_DELAY soniyadan keyin yuboriladi.
+        # Alohida task bo'lgani uchun bot boshqa e'lonlarni kutib qolmaydi.
+        task = asyncio.create_task(send_later(message_text))
+        pending_tasks.add(task)
+        task.add_done_callback(pending_tasks.discard)
+        print(f"⏳ Navbatga olindi, {SEND_DELAY} soniyadan keyin yuboriladi")
 
     except Exception as e:
         print("❌ Xatolik:", e)
