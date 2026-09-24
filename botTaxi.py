@@ -10,7 +10,7 @@ api_hash = '0d1ee14a452e04c86c4dd37709bb7a2f'
 # =================== TELEGRAM CLIENT ===================
 from telethon.sessions import StringSession
 
-SESSION = "1ApWapzMBuzYH084SG41LjGg5wSMqYx48we7ZqVdEyMxx6cEa9z0Xk8WMyxTjadhXtuIE90HmwDf99hNQgPfxEUYwCJXQnbNOE2zVp6NvVycdWICJkY6fhz_Ie0xWyqSuAHeoq7EvNVXkIpVuRX126xMSrLJvubW_ebHJLEk4BqN93yoO_41aAH1vmFfRvTfXutDps74T4bHGzDhWZOxIfmmEZW8jI0fPSkL1FZceIirlFkDzBJPnoTxcFDsD98pq-HjazboWb6pV7uZzwBzW52nn7h6Gep5pTf0Jzlp3alt7fIf6EL_BFpHX_DM4zaQt_J2ECxrL3xumhTncDkVAGKc5LryQ4N4="
+SESSION = "1ApWapzMBu3kpNoGFXYet8XApGs1JX8Q6blpMMiHwttDiBmPWMOZjz_StHlwlH6yssbFxFrLGZFQV2xTW5-ewQpEoi7fyqZaSQgSzmrFZ_mCNobZnZKobtnlk2BxQG0oATKCORYXcU7DfcJcC7geVoS_eTtbLyXyywL34Le5lUmS6CvibbQ6C691njJ_o-EldBhlMZGqpTp8IxaLKNPl2C73fvXgNu0E0afPU7U5VQUdyEsScmiKvyXbw5Br4xg7Iu6q2JPB6X2T2KitEg5AnxMsPWl6cZzNxxw85ztHE6LEKdJZlE_V9AxDg4Rf8gVX2bjn3FElgsf6CXPgdaOTBe5a7Q39VZZ4="
 client = TelegramClient(
     StringSession(SESSION),
     api_id,
